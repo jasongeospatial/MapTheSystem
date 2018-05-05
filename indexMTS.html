@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset='utf-8' />
+    <title>Traditional Practices for Pasture Democracy in Kyrgyzstan</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.44.1/mapbox-gl.css' rel='stylesheet' />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/turf/v2.0.0/turf.min.js' charset='utf-8'></script>
+    <script src="https://npmcdn.com/@turf/turf/turf.min.js"></script>
+    <script src='//d3js.org/d3.v4.min.js' charset='utf-8'></script>
+    <link rel="stylesheet" type="text/css" href="https://rawgit.com/NUKnightLab/juxtapose/1.1.3/juxtapose/css/juxtapose.css">
+    
+    
+    
+
+    <style>
+      body { margin:0; padding:0; }
+      #map { position:absolute; top:0; width:100%; height:100%;}
+      .mapboxgl-popup { max-width: 30%; font: 16px 'Roboto Condensed', sans-serif;}
+    	.settings{
+    	position:absolute;
+    	right:0px;
+    	top:5px;
+    	right:10px;
+    	width:10%;
+    	border-radius: 3px;
+    	}
+    	#buttons {position:relative;left:0px;top:0px;}
+    	.button {
+        display: inline-block;
+        position: relative;
+        cursor: pointer;
+        padding: 8px;
+        border-radius: 3px;
+        margin: 5px;
+        font-size: 12px;
+        text-align: center;
+        color: #fff;
+        background: #ee8a65;
+        font-family: sans-serif;
+        font-weight: bold;    
+    	}
+      #features-all {
+        position: absolute;
+        top:0;
+        bottom: 0;
+        left: 0;
+        width: 25%;
+        height:100%;
+        color:black;
+        border-radius: 3px;
+        background:white;
+        font-family: Roboto Condensed, sans-serif;
+        font-size:16px;
+        overflow:auto;
+      }
+      #feature-title {
+      position:relative;
+      padding:5px;
+      padding-left:10px;
+      margin-left: 5px;
+      margin-top: 2px;
+      margin-bottom: 2px;
+      margin-right: 5px;
+      font-weight: bold; 
+      color: red;
+      font-size:22px;
+      }
+      #feature-photo{
+        position: relative;
+        height: 33%;
+        max-height:33%;
+      }
+      #feature-photo img{
+        max-width:100%;
+        max-height:100%;
+        object-fit:contain;
+        display: block;
+        margin: 0 auto;
+      }
+      #feature-content{
+      position:relative;
+      margin:5px 15px 5px 10px;
+      text-align:left;
+      color:grey;
+      font-size:18px;
+      }
+      #previous {
+      display:inline-block;
+        position: relative;
+        cursor: pointer;
+        bottom:0;
+        left:0;
+        padding:20px;
+        text-align: center;
+        width:40%;
+      }
+      #pageindex {
+      display:inline-block;
+        position: relative;
+        padding:5px;
+        bottom:0;
+        font-size: 12px;
+        font-weight: bold;
+        text-align: center;
+        width:10%;
+      }
+      #next {
+        display:inline-block;
+        position: relative;
+        cursor: pointer;
+        padding:20px;
+        bottom:0;
+        right:0;
+        text-align: center;
+        width:40%;
+      }
+
+    	.legend {                                                   /* NEW */
+        font-size: 2px;                                          /* NEW */
+      }                                                           /* NEW */
+      rect {                                                      /* NEW */
+        stroke-width: 0.5;                                          /* NEW */
+      }       
+                                                          /* NEW */
+      #legendcontainer {
+      position:absolute;
+      left:25%;
+      bottom:0%;
+      width:15%;
+      color:black;
+      font-family: Roboto Condensed, sans-serif;
+      font-size: 16px;
+      display:block;
+      }
+      #styles{
+      position: relative;
+      width:10%;
+      text-align: center;
+      left:15px;
+      top:15px;
+      }
+      #fly{
+      position: relative;
+      width:10%;
+      text-align: center;
+      color: #fff;
+      background: #3887be;
+      border-radius: 3px;
+      display:none;
+      left:15px;
+      top:15px;
+      
+      }
+
+      #fly:hover{
+      color: #fff;
+      background: #3074a4;
+      }
+      
+      #sdg17 {
+        position: absolute;
+        left: 40%;
+        top: 25%;
+        display:none;
+      }
+      #marker {
+        background-image: url('/mapbox-gl-js/assets/washington-monument.jpg');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+      }
+    	#menu {
+        background: #b0c4dd;
+        position: relative;
+        z-index: 1;
+        border-radius: 3px;
+        font-family: Roboto Condensed, sans-serif;
+        display:none;
+   		 }
+   		#menu a {
+        font-size: 13px;
+        color: #404040;
+        display: block;
+        margin: 0;
+        padding: 10px;
+        text-decoration: none;
+        border-bottom: 1px solid rgba(0,0,0,0.25);
+        text-align: center;
+    	}
+    	#menu a:last-child {border: none;}
+    	#menu a:hover {background-color: #3074a4;color: #ffffff;}
+    	#menu a.active {background-color: #3887be;color: #ffffff;}
+    	#menu a.active:hover {background: #3074a4;}
+
+      #slideout {
+        position: absolute;
+        top: 35%;
+        left: 25%;
+        width: 30px;
+        padding: 4px;
+        text-align: center;
+        background: #3887be;
+        display:none;
+        color: #fff;
+        font-family: Roboto Condensed, sans-serif;
+        }
+    .slideout-glow {
+      box-shadow: 0px 0px 20px rgba(255, 187, 51, .7);
+    }
+    #slideout_inner {
+        position: fixed;
+        top: 40px;
+        left: -50%;
+        background: #3887be;
+        width: 50%;
+        padding: 5px;
+        font-family: Roboto Condensed, sans-serif;
+        border-radius: 0 0 5px 0;
+    }
+    #slideout:hover #slideout_inner {
+        left: 25%;
+        top:0px;
+    }
+    .sideways{
+      writing-mode:vertical-rl;
+      text-orientation: sideways;
+    }
+      #chart {                                                          /* NEW */
+        height: 360px;                                                  
+        position: relative;                                             
+        width:360px;
+        margin: 0 auto;                                               
+      }                                                                
+      .tooltip {                                                        /* NEW */
+        background: #eee;                                              
+        box-shadow: 0 0 5px #999999;                                   
+        color: #333;                                                   
+        display: none;                                                 
+        font-size: 16px;
+        font-family: Roboto Condensed, sans-serif;                                               
+        left: 130px;                                                   
+        padding: 10px;                                                  
+        position: absolute;                                             
+        text-align: center;                                             
+        top: 95px;                                                      
+        width: 80px;                                                    
+        z-index: 10;                                                    
+      }                                                                 
+  .legend {
+    font-size: 12px;
+  }
+  object {max-width:100%;}
+  iframe {width:100%; height:100%; display:block;}
+  #iframewrap {position:relative;max-width:100%; height:200px;}
+  
+  rect {
+    stroke-width: 2;
+    cursor: pointer;                                              
+  }
+  rect.disabled {                                                 /* NEW */
+        fill: transparent !important;                                 
+      }                                                               
+    h4{color:red;}
+    li{opacity:0;
+      border: solid 0.1em;}
+    li a {
+        color:white;
+        display: block;
+        background: #3887be;
+        padding: 8px 16px;
+        text-decoration: none;
+        font-size: 16px;
+        font-family: Roboto Condensed, sans-serif;
+    }
+    li a:hover {
+        background-color: #3074a4;
+        color: white;
+    }
+
+    </style>
+</head>
+<body>
+	
+<div id='map'></div>
+<div id="sdg17" >
+  <ul>
+    <li><a href = "jasongeospatial.github.io/Naryn" target="_blank">jasongeospatial.github.io/Naryn</a></li>
+    <li><a href = "http://develop.gcrc.carleton.ca:8050/index.html" target="_blank">develop.gcrc.carleton.ca:8050</a></li>
+    <li><a href = "https://openstreetmap.org" target="_blank" style="color:#D3D3D3">Open Street Map</a></li>
+    <li><a href = "http://www.kyrgyzstanspatial.org/" target="_blank" style="color:#D3D3D3">Kyrgyzstan Spatial</a></li>
+    <li><a href = "http://www.osi-panthera.org/" target="_blank" style="color:#D3D3D3">OSI Panthera</a></li>
+    <li><a href = "https://okmot.kg/" target="_blank" style="color:#D3D3D3">Information Resources of the Kyrgyz Republic</a></li>
+    <li><a href = "https://data.srs.kg/" target="_blank" style="color:#D3D3D3">Election Analytic</a></li>
+    <li><a href = "http://www.reach-initiative.kg/" target="_blank" style="color:#D3D3D3">Reach Initiative</a></li>
+  </ul>
+</div>
+<div class='settings'>
+</div>
+
+<div id="features-all" class="relatedlead">
+  	<div id='feature-photo'></div>
+	<div id='feature-title'></div>
+	<div id='feature-content'>
+		<div id="Institutional"></div>
+		<div id="Technical"></div>
+		<div id="Legal"></div>
+	</div>  
+	<div id='previous'><img src="./images/previous.png" style="max-width:100%;max-height:100%;"></div>
+	<div id="pageindex">1/5</div>
+	<div id='next'><img src="./images/next.png" style="max-width:100%;max-height:100%;"></div>
+</div>
+
+<!-- Overall container for all interactive widgets -->
+<div id="legendcontainer">
+	 <nav id="menu"></nav>
+</div>
+
+<!-- slide out panel for SNA --> 
+<div id="slideout" class="slideout-glow">
+    <p class="sideways">Network Graphic</p>
+    <div id="slideout_inner">
+      <img src="images/genderviz.png" width="100%">
+    </div>
+</div>
+   
+ 
+  
+<script>
+	
+mapboxgl.accessToken = 'pk.eyJ1IjoibWFkc2tpaWVyIiwiYSI6ImNqZ2lhYW05ZzBrOWEzMmxrY3AzYjVzNGMifQ.ul9h0PTne6n_HSio1ATTDw';
+var map = new mapboxgl.Map({
+    style: 'mapbox://styles/mapbox/bright-v9',
+    center: [75.079,41.655], 
+    zoom: 1.99,
+    pitch: 45,
+    bearing: 0,
+    //bearing: -17.6
+    hash: true,
+    container: 'map'
+});
+
+
+//coords for pasture migration route
+  origin = [ 76.529977533567489, 41.503443869772582 ];
+  destination = [ 77.196023676052903, 41.477726778523653 ];
+  var counter = 0;
+  var arc = [];
+  var route = {
+    "type": "FeatureCollection",
+    "features": [{
+        "type": "Feature",
+        "geometry": {
+            "type": "LineString",
+            "coordinates": [origin, destination
+            ]
+        }
+    }]
+  };
+
+
+
+var image = document.getElementById('feature-photo');
+var title = document.getElementById('feature-title');
+var instit = document.getElementById('Institutional');
+var tech = document.getElementById('Technical');
+var legal = document.getElementById('Legal');
+
+var locations = [
+  {
+    	"id":"1",
+    	"image":"<img src=\'./images/welcome2.jpg\' title=\'Many Kyrgyz learn how to ride a horse as young children. Horses are a common form of transportation in rural regions and also represent wealth. Photo by Jason Wong\'style=\'padding:10px\'>",
+    	"title":"Welcome to Kyrgyzstan",
+		"instit":"Kyrgyzstan is a young democracy with a nomadic tradition, emerging from the shadow of the USSR. In the pasture sector, local <b>pasture committees</b> have been empowered to make governance fairer. However, this approach has failed to improve local representation in high mountain pastures due to technical, institutional, and legal factors. <br><br><b>How can we make democracy reach the highest mountains in Kyrgyzstan?</b>",
+    	"tech":"",
+    	"legal":"",
+    	"camera": {
+    		center:[78.1,44.6],
+    		zoom:1.8,
+    		pitch:15,
+        bearing:0
+    	}
+    }
+	,{
+    	"id":"2",
+    	"image":"<img src=\'./images/yurt3.jpg\' title=\'In Song Kul, herders set up yurts such as these as their home in the mountains for the summer. Photo by Jason Wong\' style=\'padding:10px\'>",
+    	"title":"The Problem Landscape",
+    	"instit":"1) The make-up of PCs is not representative of the people that use them.<br>2)	Community members are discouraged from participating due to a Soviet mentality<br>",
+    	"tech":"3)	Statistics on how people communicate and use pastures are patchwork, missing, and manipulated.",
+    	"legal":"5)	Women are not represented in pasture use <br>6) Illicit activities result, raising tensions",
+    	"camera": {
+    		center:[ 72.539,41.043],
+    		zoom:5.76,
+    		pitch:50
+    	}
+    }
+    ,{
+    	"id":"3",
+    	"image":"<img src=\'./images/basemapping2.jpg\' title=\'Our team introduces place mapping with pasture users in Ardakty pasture, Naryn. Photo by Jason Wong\' style=\'padding:10px\'>",
+    	"title":"The Solution Landscape",
+    	"instit":"1) Subsidize-Sanction model in Mongolia <br>2) National Association of Pasture User Committees in Kyrgyzstan <br>",
+    	"tech":"3)	E-pasture monitoring system pilot in Naryn <br>4)	E-Bilim, a mobile library in Naryn <br> ",
+    	"legal":"5) Women’s Committees created by international donors <br>6) Eco-tourism permits in Nepal",
+      "camera": {
+    		center:[82.88,38.53],
+    		zoom:3.8,
+    		pitch:30
+    	}
+    }		
+    ,{
+   		 "id":"4",
+   		 "image":"<img src=\'./images/board_game2.jpg\' title=\'Mapping distinct features is difficult in the rolling high pastures. Instead, our team uses a custom board game to explain different herding practices and their geographic implications. Photo by Nadira Degembaeva\' style=\'padding:10px\'>",
+    	"title":"Gaps and Levers",
+    	"instit":"1) Gap: Consideration of local hierarchies.<br> Lever: TK as a merit-based system <br>2) Gap: Unequal participation by resource users in governance <br>Lever: Collaborative, storytelling to draw in users through pride and education",
+    	"tech":"3) Gap: Missing information infrastructure.<br>Lever: Open-data platforms",
+    	"legal":"4) Gap: Inflexible zoning of lands. Lever: TK for an ecosystem view of pastures<br>5)	Gap: Women under-represented. <br>Lever: Enforce women's representation on PCs",
+    	"camera": {
+    		center:[76.2132,41.5015],
+    		zoom:8.54,
+    		pitch:30,
+        bearing:0
+    	}
+    }
+    ,{
+       "id":"5",
+       "image":"<img src=\'./images/highpasture2.jpg\' title=\'A park ranger of Salkyn Tor park shows a little-used path while monitoring the park and nearby pastures. Photo by Jason Wong\' style=\'padding:10px\'>",
+      "title":"Sustainable Development Goal 17: A sustainable development knowledge platform",
+      "instit":"<br><br>Traditional knowledge can make our democracy fairer.<br><br><br>Storytelling brings everyday people to the table.",
+      "tech":"",
+      "legal":"",
+      "camera": {
+        center:[76.7752, 41.5044],
+        zoom:9.42,
+        pitch:40
+      }
+    }
+    ];
+ 
+
+//function to fly to points along migration tour
+var flyindex = 0;
+/*document.getElementById('fly').addEventListener('click', function() {
+  if(flyindex!=flyspots.length){
+    document.getElementById("fly").innerHTML = "Continue";
+    map.flyTo({
+        
+        // These options control the ending camera position: centered at
+        // the target, at zoom level 9, and north up.
+        center: flyspots[flyindex].start,
+        zoom: flyspots[flyindex].zoom,
+        bearing: flyspots[flyindex].bearing,
+
+        // These options control the flight curve, making it move
+        // slowly and zoom out almost completely before starting
+        // to pan.
+        speed: flyspots[flyindex].speed, // make the flying slow
+        curve: flyspots[flyindex].curve, // change the speed at which it zooms out
+        pitch: flyspots[flyindex].pitch,
+        // This can be any easing function: it takes a number between
+        // 0 and 1 and returns another number between 0 and 1.
+        easing: function (t) {
+            return t;
+        }
+    });
+  flyindex = flyindex + 1;
+  } else{flyindex = 0;
+    document.getElementById("fly").innerHTML = "Start again";
+    //pasturepoint.features[0].geometry.coordinates = origin;
+    //map.getSource("pasturepoint").setData(pasturepoint);
+    //counter=0;
+  }
+});*/
+
+  
+
+
+//function to make the camera pan to the next slide    
+function playback(index) {
+    image.innerHTML = locations[index].image;
+    title.textContent = locations[index].title;
+    //description.innerHTML = locations[index].description;
+    instit.innerHTML = locations[index].instit;
+    tech.innerHTML = locations[index].tech;
+    legal.innerHTML = locations[index].legal;
+    // Animate the map position based on camera properties
+    map.flyTo(locations[index].camera);
+}
+// Toggle visible layers
+var toggleableLayerIds = ['Institutional', 'Technical', 'Legal'];
+
+for (var i = 0; i < toggleableLayerIds.length; i++) {
+    var id = toggleableLayerIds[i];
+    var link = document.createElement('a');
+    link.href = '#';
+    link.className = '';
+    link.textContent = id;
+
+    link.onclick = function (e) {
+        var clickedLayer = this.textContent; 
+        var clickedIndex = this.id;
+        e.preventDefault();
+        e.stopPropagation();
+        //change colour of text depending on which switcher label clicked
+        //switchLayer(); 
+        var textviz = document.getElementById(clickedLayer);
+        if (textviz.style.color == "red"){//disable layers on switcher label click
+        	textviz.style.color = "grey";
+        	this.className="";
+        	if (index==1){ // PROBLEMS LANDSCAPE SLIDE
+        		if (clickedLayer==toggleableLayerIds[0]){ //for instit field
+        			map.setLayoutProperty('KG','visibility','none');
+        		} else if (clickedLayer==toggleableLayerIds[1]){//for tech field
+        			
+        			map.setLayoutProperty("Provinces","visibility","none");
+        		} else if (clickedLayer==toggleableLayerIds[2]){ //for legal field
+
+        		} 
+        	} else if (index==2){ //SOLUTIONS SLIDE
+        		if (clickedLayer==toggleableLayerIds[0]){ //for instit field
+        			map.setLayoutProperty('solutions_countries','visibility','none');
+        		} else if (clickedLayer==toggleableLayerIds[1]){//for tech field
+        			
+        		} else if (clickedLayer==toggleableLayerIds[2]){ //for legal field
+
+        		} 
+        	} else if (index==3){ //GAPS & LEVERS SLIDE
+        		if (clickedLayer==toggleableLayerIds[0]){ //for instit field
+        			
+        			slideout.style.display="none";
+        		} else if (clickedLayer==toggleableLayerIds[1]){//for tech field
+        			map.setLayoutProperty("Study Sites","visibility","none");
+        		} else if (clickedLayer==toggleableLayerIds[2]){ //for legal field
+        			map.setLayoutProperty("pasture_route","visibility","none");
+              map.setLayoutProperty("pasture_borders","visibility","none");
+              map.setLayoutProperty("Russian Juniper","visibility","none");
+        		} 
+        	}
+        } else { //enable layers on switcher label click
+        	textviz.style.color = "red";
+        	this.className="active";
+        	if (index==1){ // PROBLEMS SLIDE
+            
+        		if (clickedLayer==toggleableLayerIds[0]){ //for instit field
+        			map.setLayoutProperty('KG','visibility','visible');
+        		} else if (clickedLayer==toggleableLayerIds[1]){//for tech field
+        			
+        			map.setLayoutProperty("Provinces","visibility","visible");
+        		} else if (clickedLayer==toggleableLayerIds[2]){ //for legal field
+
+        		} 
+        	} else if (index==2){ //SOLUTIONS SLIDE
+            slideout.style.display="none";
+        		if (clickedLayer==toggleableLayerIds[0]){ //for instit field
+        			map.setLayoutProperty('solutions_countries','visibility','visible');
+        		} else if (clickedLayer==toggleableLayerIds[1]){//for tech field
+        			
+        		} else if (clickedLayer==toggleableLayerIds[2]){ //for legal field
+
+        		} 
+        	} else if (index==3){ //GAPS & LEVERS SLIDE
+        		if (clickedLayer==toggleableLayerIds[0]){ //for instit field
+        			
+        			slideout.style.display="block";
+        		} else if (clickedLayer==toggleableLayerIds[1]){//for tech field
+        			map.setLayoutProperty("Study Sites","visibility","visible");
+        		} else if (clickedLayer==toggleableLayerIds[2]){ //for legal field
+        			map.setLayoutProperty("pasture_route","visibility","visible");
+              map.setLayoutProperty("pasture_borders","visibility","visible");
+              map.setLayoutProperty("Russian Juniper","visibility","visible");
+        		} else {
+              
+            }
+        	}
+        }
+    	   
+    };
+    
+    var menulayers = document.getElementById('menu');
+    menulayers.appendChild(link);
+    menu.getElementsByTagName("a")[0].className='active';
+}
+//fade-in function (for SDG17 list). Controls how fast each individual entry fills itself in
+function unfade(element) {
+    var op = 0.1;  // initial opacity
+    element.style.display = 'block';
+    var timer = setInterval(function () {
+        if (op >= 1){
+            clearInterval(timer);
+        }
+        element.style.opacity = op;
+        element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+        op += op * 0.05;
+    }, 20);
+}
+   
+    
+map.on('load', function() {
+
+  //add source and layer for timeslider content
+  d3.json('Geospatial Data/eco_monitoring.geojson', function(err, data) {
+        if (err) throw err;
+        // Create a month property value based on time
+        // used to filter against.
+        data.features = data.features.map(function(d) {
+            d.properties.month = new Date(d.properties.time).getMonth();
+            return d;
+        });
+        map.addSource("eco_monitoring", {
+            "type": "geojson",
+            "data": data
+        });
+        //load marker icon images for eco-monitoring layer
+        map.loadImage('images/animal.png',function(error,image){
+          if (error) throw error;
+          map.addImage("./images/animal.png", image);
+        })
+        map.loadImage('images/pasture.png',function(error,image){
+          if (error) throw error;
+          map.addImage("./images/pasture.png", image);
+        })
+        map.loadImage('images/water.png',function(error,image){
+          if (error) throw error;
+          map.addImage("./images/water.png", image);
+        })
+        map.loadImage('images/soviet.png',function(error,image){
+          if (error) throw error;
+          map.addImage("./images/soviet.png", image);
+        })
+        map.loadImage('images/plant.png',function(error,image){
+          if (error) throw error;
+          map.addImage("./images/plant.png", image);
+        })
+        map.loadImage('images/rangers.png',function(error,image){
+          if (error) throw error;
+          map.addImage("./images/rangers.png", image);
+        })
+        map.loadImage('images/townevent.png',function(error,image){
+          if (error) throw error;
+          map.addImage("./images/townevent.png", image);
+        })
+        map.addLayer({
+            "id": "eco_monitoring",
+            "type": "symbol",
+            "source": "eco_monitoring",
+            "layout":{
+              "icon-image": ["get", "icon"],
+              "icon-size":0.1,   
+              "visibility":"none",     
+              "icon-allow-overlap":true
+            }  
+          });
+        
+  });
+  map.addSource('dem', {
+        "type": "raster-dem",
+        "url": "mapbox://mapbox.terrain-rgb"
+  });
+   map.addSource('contours', {
+        type: 'vector',
+        url: 'mapbox://mapbox.mapbox-terrain-v2'
+    });
+ /*  map.addSource('problems-contour', {
+        type: 'vector',
+        url: 'mapbox://styles/madskiier/cjgi82ffa001e2tlk3u48nhvv'
+    });*/
+	//Load external GeoJSON files
+	map.addSource("ussr_with_KG", {
+            "type": "geojson",
+            "data": "Geospatial Data/ussr_with_KG.geojson"
+  });
+  map.addSource("solutions_countries", {
+            "type": "geojson",
+            "data": "Geospatial Data/solutions_countries.geojson"
+  });
+  map.addSource("before_after_osm", {
+            "type": "geojson",
+            "data": "Geospatial Data/open_data_sites.geojson"
+  });
+  map.addSource("KG", {
+            "type": "geojson",
+            "data": "Geospatial Data/KG.geojson"
+        });
+  map.addSource("pasture_borders", {
+            "type": "geojson",
+            "data": "Geospatial Data/pasture_boundaries.geojson"
+        });
+  map.addSource("Provinces", {
+            "type": "geojson",
+            "data": "Geospatial Data/kg_provinces.geojson"
+        });
+  map.addSource("pasture_POI", {
+            "type": "geojson",
+            "data": "Geospatial Data/pasture_POI_test.geojson"
+        });
+  
+  map.addSource('pasture_route', {
+   "type": 'geojson',
+   'data': 'Geospatial Data/pasture_route.geojson'
+  });
+ 
+  map.addSource("Russian Juniper", {
+            "type": "geojson",
+            "data": "Geospatial Data/medplants.russianJuniper.geojson"
+  });
+  map.addSource("Goat Wheat", {
+            "type": "geojson",
+            "data": "Geospatial Data/medplants.goatwheat.geojson"
+  });
+  map.addSource("Persian Walnut", {
+            "type": "geojson",
+            "data": "Geospatial Data/medplants.persianwalnut.geojson"
+  });
+  var layers = map.getStyle().layers;
+    // Find the index of the first symbol layer in the map style
+    var labelLayerId;
+    for (var i = 0; i < layers.length; i++) {
+        if (layers[i].type === 'symbol' && layers[i].layout['text-field']) {
+            labelLayerId = layers[i].id;
+            break;
+        }
+    }
+	
+	// Add zoom and rotation controls to the map.
+	map.addControl(new mapboxgl.NavigationControl());
+  
+    // Add layers
+    map.addLayer({
+            "id": "USSR-KG",
+            "type": "fill",
+            "source": "ussr_with_KG",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.5
+            }  
+        },labelLayerId);
+    //hover state for USSR-KG polygons
+    map.addLayer({
+            "id": "USSR-KG-hover",
+            "type": "fill",
+            "source": "ussr_with_KG",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.8
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+
+    map.addLayer({
+            "id": "Provinces",
+            "type": "fill",
+            "source": "Provinces",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.6
+              ,'fill-outline-color':"#ffff00"
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+    map.addLayer({
+            "id": "solutions_countries",
+            "type": "fill",
+            "source": "solutions_countries",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.6
+              ,'fill-outline-color':"#ffff00"
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+    //hover layer for soultions_countries
+    map.addLayer({
+            "id": "solutions_countries-hover",
+            "type": "fill",
+            "source": "solutions_countries",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.95
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+
+     map.addLayer({
+        'id': 'contours',
+        'type': 'line',
+        'source': 'contours',
+        'source-layer': 'contour',
+        'layout': {
+            'visibility': 'visible',
+            'line-join': 'round',
+            'line-cap': 'round',
+            'visibility':'none'
+        },
+        'paint': {
+            'line-color': '#877b59',
+            'line-width': 1
+        }
+    });
+    //hover state for Provinces
+    map.addLayer({
+            "id": "Provinces-hover",
+            "type": "fill",
+            "source": "Provinces",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.8
+              ,'fill-outline-color':"#ffff00"
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+    map.addLayer({
+            "id": "KG",
+            "type": "fill",
+            "source": "KG",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.75
+            },
+            'layout': {
+              'visibility':'none'
+            }    
+        },labelLayerId);
+    map.addLayer({
+            "id": "pasture_route"
+            ,"type": "line"
+            ,"source": "pasture_route"
+            ,"paint":{
+              "line-color":{
+                'type':'identity',
+                'property':'color'
+              },
+              'line-width': 5
+            } 
+            ,"layout":{"visibility":"visible","line-cap":"round", "line-join":"round"}
+    });
+    //generate curved coordinates for pasture route
+    d3.json('Geospatial Data/pasture_route.geojson', function(data) {
+      var linehold = data.features[0].geometry.coordinates[0];
+      turfline = turf.lineString(linehold);
+      var curved = turf.bezierSpline(turfline);
+      map.getSource("pasture_route").setData(curved);
+      route.features[0].geometry.coordinates = curved; //need to pass out this variable curved!!!
+      map.setLayoutProperty("pasture_route", "visibility", "none");
+    }); 
+
+    map.addLayer({
+        "id": "Hillshading",
+        "source": "dem",
+        "type": "hillshade"
+    });
+    /*map.addLayer({
+        "id": "problems-contour",
+        "source": "problems-contour",
+        "source-layer":"contour",
+        "type": "line"
+    });*/
+    map.addLayer({
+            "id": "Russian Juniper",
+            "type": "fill",
+            "source": "Russian Juniper",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.9
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+    map.addLayer({
+            "id": "Russian Juniper highlight",
+            "type": "fill",
+            "source": "Russian Juniper",
+            'paint': {
+              "fill-outline-color": "#ff9",
+              'fill-color': "#f70" 
+              ,'fill-opacity': 1
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        });
+    map.addLayer({
+            "id": "Goat Wheat",
+            "type": "fill",
+            "source": "Goat Wheat",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.9
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+    map.addLayer({
+            "id": "Goat Wheat highlight",
+            "type": "fill",
+            "source": "Goat Wheat",
+            'paint': {
+              "fill-outline-color": "#ff9",
+              'fill-color': "#f70" 
+              ,'fill-opacity': 1
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        });
+    map.addLayer({
+            "id": "Persian Walnut",
+            "type": "fill",
+            "source": "Persian Walnut",
+            'paint': {
+              'fill-color': {
+                'type':'identity',
+                'property':'color'
+              }
+              ,'fill-opacity': 0.9
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        },labelLayerId);
+    map.addLayer({
+            "id": "Persian Walnut highlight",
+            "type": "fill",
+            "source": "Persian Walnut",
+            'paint': {
+              "fill-outline-color": "#ff9",
+              'fill-color': "#f70" 
+              ,'fill-opacity': 1
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        });
+    map.addLayer({
+            "id": "pasture_borders",
+            "type": "fill",
+            "source": "pasture_borders",
+            'paint': {
+              "fill-outline-color": "#ff9",
+              'fill-color': "#8cbf65" 
+              ,'fill-opacity': 0.75
+            },
+            'layout': {
+              'visibility':'none'
+            }  
+        });
+
+      
+   //loads marker images for the before_after_osm layer
+   map.loadImage('images/village.png',function(error,image){
+      if (error) throw error;
+      map.addImage("village", image);
+    
+   map.addLayer({
+            "id": "Study Sites",
+            "type": "symbol",
+            "source": "before_after_osm",
+            "layout":{
+              "icon-image": "village",
+              "icon-size":0.07,
+              "icon-allow-overlap":true,
+              "visibility":"none"
+            }  
+        });
+   })
+   map.loadImage('images/rangers.png',function(error,image){
+      if (error) throw error;
+      map.addImage("rangers", image);
+    
+   map.addLayer({
+            "id": "pasture_POI",
+            "type": "symbol",
+            "source": "pasture_POI",
+            "layout":{
+              "icon-image": "rangers",
+              "icon-size":0.07,
+              "visibility":"none"
+            }  
+        });
+   })
+    
+    // Create a popup, but don't add it to the map yet.
+    var popup = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: false
+    });
+    var popup_pastures = new mapboxgl.Popup({
+        closeButton: true,
+        closeOnClick: true
+    });
+
+    //hovering for USSR-KG Polygons
+    map.on("mousemove", "USSR-KG", function(e) {
+        map.setLayoutProperty('USSR-KG-hover', 'visibility','visible');
+        map.setFilter("USSR-KG-hover", ["==", "NAME", e.features[0].properties.NAME]);
+    });
+    // Reset the state-fills-hover layer's filter when the mouse leaves the layer.
+    map.on("mouseleave", "USSR-KG", function() {
+    	map.setLayoutProperty('USSR-KG-hover', 'visibility','none')
+        map.setFilter("USSR-KG-hover", ["==", "NAME", ""]);
+    });
+ //hovering for solutions_countries Polygons
+    map.on("mousemove", "solutions_countries", function(e) {
+        map.setLayoutProperty('solutions_countries-hover', 'visibility','visible');
+        map.setFilter("solutions_countries-hover", ["==", "name", e.features[0].properties.name]);
+    });
+    // Reset the state-fills-hover layer's filter when the mouse leaves the layer.
+    map.on("mouseleave", "solutions_countries", function() {
+      map.setLayoutProperty('solutions_countries-hover', 'visibility','none')
+        map.setFilter("solutions_countries-hover", ["==", "name", ""]);
+    });
+
+    //pop ups for before-after markers
+    map.on('click', 'Study Sites', function(e) {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+        // Populate the line popup and set its coordinates based on the first coordinates of the line
+        if (e.features[0].properties.image == null){
+            popup.setLngLat(e.lngLat)
+            .setHTML('<h4>'+ e.features[0].properties.Name + '</h4>' 
+              + e.features[0].properties.description + '<br>'
+              + e.features[0].properties.caption
+              )
+            .addTo(map);
+        } else {
+        popup.setLngLat(e.lngLat)
+            .setHTML('<h4>'+ e.features[0].properties.Name + '</h4>' 
+              + e.features[0].properties.description
+              + '<br> <object data="' + e.features[0].properties.image+ '" type ="image/jpg"></object> <br>'
+              + "<i>" + e.features[0].properties.caption + "</i>"
+              )
+            .addTo(map);
+          }
+            map.flyTo({center: [e.features[0].geometry.coordinates[0],e.features[0].geometry.coordinates[1]]});
+    });
+    //pop up for solutions_countries
+    map.on('click', 'solutions_countries', function(e) {
+        // Change the cursor style as a UI indicator.
+        map.getCanvas().style.cursor = 'pointer';
+        // Populate the line popup and set its coordinates based on the first coordinates of the line
+            popup.setLngLat(e.lngLat)
+            .setHTML('<h4>'+ e.features[0].properties.name + '</h4> Learn more about this project at ' 
+              + e.features[0].properties.url
+              )
+            .addTo(map);
+          
+  
+            map.flyTo({center: [e.features[0].geometry.coordinates[0],e.features[0].geometry.coordinates[1]]});
+    });
+    //pop ups for KG Provinces
+    map.on("mousemove", "Provinces", function(e) {
+        map.setLayoutProperty('Provinces-hover', 'visibility','visible')
+        map.setFilter("Provinces-hover", ["==", "NAME_1", e.features[0].properties.NAME_1]);
+        
+    });
+    // Reset the state-fills-hover layer's filter when the mouse leaves the layer.
+    map.on("mouseleave", "Provinces", function() {
+    	map.setLayoutProperty('Provinces-hover', 'visibility','none')
+        map.setFilter("Provinces-hover", ["==", "NAME_1", ""]);
+    });
+
+
+    map.on('click', 'Provinces', function(e) {
+        map.getCanvas().style.cursor = 'pointer';
+        // Populate the line popup and set its coordinates based on the first coordinates of the line
+        popup.setLngLat(e.lngLat)
+            .setHTML('<h4>'+ e.features[0].properties.VARNAME_1 + ' ' + e.features[0].properties.ENGTYPE_1 + '</h4>' 
+              + '<b>Top eight livelihood activities (thousands employed, 2016)</b> <br><i>Click on each legend item\'s box to toggle it on or off.<div id="chart"></div> Data courtesy of the National Statistical Committee of the Kyrgyz Republic (www.stat.kg)</i>'
+            )
+            .addTo(map);
+            map.flyTo({center: [e.lngLat.lng,e.lngLat.lat]});
+            //create pie charts
+         var pieindex = e.features[0].properties.url;
+         (function(d3) {
+        'use strict';
+        
+        var $container = $('#chart'),
+        width = $container.width(),
+        height = $container.height(),
+         radius = Math.min(width, height) / 2,
+         donutWidth = 75,                            
+        legendRectSize = 14,                                  
+        legendSpacing = 4;       
+        //var width = "100%";
+        //var height = "100%";
+         
+        var color = d3.scaleOrdinal(d3.schemeCategory10);
+
+        var svg = d3.select('#chart')
+          .append('svg')
+          .attr('width', width)
+          .attr('height', height)
+          //.attr("viewBox" , "0 0 360 360")
+          .attr('viewBox','0 0 '+ Math.min(width,height)+' '+Math.min(width,height))
+          .attr("preserveAspectRatio", "xMinYMin ")
+          .append('g')
+          .attr("transform", "translate(" + Math.min(width,height) / 2 + "," + Math.min(width,height) / 2 + ")");
+          //.attr('transform', 'translate(' + (width / 2) + ',' + (height / 2) + ')');
+
+        var arc = d3.arc()
+          .innerRadius(radius - donutWidth)           
+          .outerRadius(radius);
+
+        var pie = d3.pie()
+          .value(function(d) { return d.count; })
+          .sort(null);
+
+        var tooltip = d3.select('#chart')                               // NEW
+          .append('div')                                                // NEW
+          .attr('class', 'tooltip');                                    // NEW
+
+        tooltip.append('div')                                           // NEW
+          .attr('class', 'label');                                      // NEW
+
+        tooltip.append('div')                                           // NEW
+          .attr('class', 'count');                                      // NEW
+
+        tooltip.append('div')                                           // NEW
+          .attr('class', 'percent');                                    // NEW
+
+        d3.csv(pieindex, function(error, dataset) {  // NEW
+        dataset.forEach(function(d) {                    
+         d.count = +d.count;                            
+         d.enabled = true;                               
+        });                                              
+
+        var path = svg.selectAll('path')
+          .data(pie(dataset))
+          .enter()
+          .append('path')
+          .attr('d', arc)
+          .attr('fill', function(d) {
+            return color(d.data.label);
+          })
+          .each(function(d) { this._current = d; });                // NEW
+
+        path.on('mouseover', function(d) {                            // NEW
+            var total = d3.sum(dataset.map(function(d) {                // NEW
+              return (d.enabled) ? d.count : 0;
+            }));                                                        // NEW
+            var percent = Math.round(1000 * d.data.count / total) / 10; // NEW
+            tooltip.select('.label').html(d.data.label);                // NEW
+            tooltip.select('.count').html(d.data.count + " thousand");                // NEW
+            tooltip.select('.percent').html(percent + '%');             // NEW
+            tooltip.style('display', 'block');                          // NEW
+          });                                                           // NEW
+
+          path.on('mouseout', function() {                              // NEW
+            tooltip.style('display', 'none');                           // NEW
+          });                                                           // NEW
+
+          
+          path.on('mousemove', function(d) {                            // NEW
+            tooltip.style('top', (d3.event.layerY + 10) + 'px')         // NEW
+              .style('left', (d3.event.layerX + 10) + 'px');            // NEW
+          });                                                           // NEW
+          
+
+        var legend = svg.selectAll('.legend')                     // NEW
+          .data(color.domain())                                   // NEW
+          .enter()                                                // NEW
+          .append('g')                                            // NEW
+          .attr('class', 'legend')                                // NEW
+          .attr('transform', function(d, i) {                     // NEW
+            var height = legendRectSize + legendSpacing;          // NEW
+            var offset =  height * color.domain().length / 2;     // NEW
+            var horz = -5 * legendRectSize;                       // NEW
+            var vert = i * height - offset;                       // NEW
+            return 'translate(' + horz + ',' + vert + ')';        // NEW
+          });                                                     // NEW
+
+        legend.append('rect')                                     // NEW
+          .attr('width', legendRectSize)                          // NEW
+          .attr('height', legendRectSize)                         // NEW
+          .style('fill', color)                                   // NEW
+          .style('stroke', color)                                // NEW
+          .on('click', function(label) {                            // NEW
+              var rect = d3.select(this);                             // NEW
+              var enabled = true;                                     // NEW
+              var totalEnabled = d3.sum(dataset.map(function(d) {     // NEW
+                return (d.enabled) ? 1 : 0;                           // NEW
+              }));                                                    // NEW
+
+              if (rect.attr('class') === 'disabled') {                // NEW
+                rect.attr('class', '');                               // NEW
+              } else {                                                // NEW
+                if (totalEnabled < 2) return;                         // NEW
+                rect.attr('class', 'disabled');                       // NEW
+                enabled = false;                                      // NEW
+              }                                                       // NEW
+
+              pie.value(function(d) {                                 // NEW
+                if (d.label === label) d.enabled = enabled;           // NEW
+                return (d.enabled) ? d.count : 0;                     // NEW
+              });                                                     // NEW
+
+              path = path.data(pie(dataset));                         // NEW
+
+              path.transition()                                       // NEW
+                .duration(750)                                        // NEW
+                .attrTween('d', function(d) {                         // NEW
+                  var interpolate = d3.interpolate(this._current, d); // NEW
+                  this._current = interpolate(0);                     // NEW
+                  return function(t) {                                // NEW
+                    return arc(interpolate(t));                       // NEW
+                  };                                                  // NEW
+                });                                                   // NEW
+            });                                                       // NEW
+
+        legend.append('text')                                     // NEW
+          .attr('x', legendRectSize + legendSpacing)              // NEW
+          .attr('y', legendRectSize - legendSpacing)              // NEW
+          .text(function(d) { return d; });                       // NEW
+        });                                                // NEW
+
+      })(window.d3)   
+
+ 
+    });
+    
+    //Pans the camera to the next or previous location on "locations" when the "next" button is clicked
+	index = 0;
+  liCount = sdg17.getElementsByTagName("li").length;//counts how many line entries there are for SDG17 table
+
+    document.getElementById('next').addEventListener('click', function(event) {
+        index = (index + 1 === locations.length) ? 0 : index + 1;
+            playback(index);
+           
+            //closes all previously opened popups
+            popup.remove();
+            popup_pastures.remove();
+
+            //COPY THE BELOW CODE FOR back-button functionality as well
+            //resets every time you go to next slide so only institutional tab is initially selected
+            menu.getElementsByTagName("a")[0].className='active'
+            menu.getElementsByTagName("a")[1].className=''
+            menu.getElementsByTagName("a")[2].className=''
+            instit.style.color="red";
+            tech.style.color='grey';
+            legal.style.color='grey';
+            //turns on or off layers depending on what slide you are currently viewing while pressing the forward-slide button
+            if (index == 0){
+            	map.setLayoutProperty('USSR-KG', 'visibility','visible'); 
+            	menu.style.display ="none";
+            }else{
+            	map.setLayoutProperty('USSR-KG', 'visibility','none');
+            	menu.style.display="block";
+            }
+            //set of layers for PROBLEM LANDSCAPE
+            if (index==1){
+             
+                map.setLayoutProperty('KG', 'visibility','visible');
+                
+                
+            } else { //turns off all layers from Problem Landscape
+                map.setLayoutProperty('Provinces', 'visibility','none');
+                map.setLayoutProperty('eco_monitoring', 'visibility','none')
+                map.setLayoutProperty('KG', 'visibility','none');
+
+            }
+
+            //set of layers for SOLUTION LANDSCAPE
+            if (index==2){
+                //initially displays instituitional layers
+
+                map.setLayoutProperty('solutions_countries','visibility','visible');
+                
+            } else { //turns off all layers from Solution Landscape
+                map.setLayoutProperty('solutions_countries','visibility','none');
+            }
+
+            //set of layers for Gaps and Levers
+            if (index==3){
+                //initially displays instituitional layers
+                slideout.style.display="block";
+
+            } else { //turns off all layers from G&L
+                slideout.style.display="none";
+                map.setLayoutProperty("pasture_route","visibility","none");
+                map.setLayoutProperty("pasture_borders","visibility","none");
+                map.setLayoutProperty("Russian Juniper","visibility","none");
+                map.setLayoutProperty("Study Sites","visibility","none");
+            }
+            // END OF CODE TO BE COPIED
+
+            if (index == 4){
+              menu.style.display ="none"
+              sdg17.style.display="block";
+              //fade in list items for SDG17
+              
+              unfade(sdg17.getElementsByTagName("li").item(0));
+
+              for (var i = 1; i < liCount; i++){ //fade in each line entry one at a time. Controls the speed that the entire set of rows gets faded
+                (function(i) {
+                  setTimeout(function(){
+                    unfade(sdg17.getElementsByTagName("li").item(i));
+                  },i*500)
+                })(i);
+              }
+            } else {
+              sdg17.style.display="none";
+              for (var i = 0; i < liCount; i++){
+                sdg17.getElementsByTagName("li")[i].style.opacity=0;
+              }
+            }
+            document.getElementById('pageindex').textContent = locations[index].id + "/" + locations.length;
+
+    });
+    document.getElementById('previous').addEventListener('click', function(event) {
+        index = (index - 1 === -1) ? locations.length-1 : index - 1;
+            playback(index);
+           
+            //closes all previously opened popups
+            popup.remove();
+            popup_pastures.remove();
+
+            //COPY THE BELOW CODE FOR back-button functionality as well
+            //resets every time you go to next slide so only institutional tab is initially selected
+            menu.getElementsByTagName("a")[0].className='active'
+            menu.getElementsByTagName("a")[1].className=''
+            menu.getElementsByTagName("a")[2].className=''
+            instit.style.color="red";
+            tech.style.color='grey';
+            legal.style.color='grey';
+            //turns on or off layers depending on what slide you are currently viewing while pressing the forward-slide button
+            if (index == 0){
+              map.setLayoutProperty('USSR-KG', 'visibility','visible'); 
+              menu.style.display ="none";
+            }else{
+              map.setLayoutProperty('USSR-KG', 'visibility','none');
+              menu.style.display="block";
+            }
+            //set of layers for PROBLEM LANDSCAPE
+            if (index==1){
+             
+                map.setLayoutProperty('KG', 'visibility','visible');
+                
+                
+            } else { //turns off all layers from Problem Landscape
+                map.setLayoutProperty('Provinces', 'visibility','none');
+                map.setLayoutProperty('eco_monitoring', 'visibility','none')
+                map.setLayoutProperty('KG', 'visibility','none');
+
+            }
+
+            //set of layers for SOLUTION LANDSCAPE
+            if (index==2){
+                //initially displays instituitional layers
+
+                map.setLayoutProperty('solutions_countries','visibility','visible');
+                
+            } else { //turns off all layers from Solution Landscape
+                map.setLayoutProperty('solutions_countries','visibility','none');
+            }
+
+            //set of layers for Gaps and Levers
+            if (index==3){
+                //initially displays instituitional layers
+                slideout.style.display="block";
+
+            } else { //turns off all layers from G&L
+                slideout.style.display="none";
+                map.setLayoutProperty("pasture_route","visibility","none");
+                map.setLayoutProperty("pasture_borders","visibility","none");
+                map.setLayoutProperty("Russian Juniper","visibility","none");
+                map.setLayoutProperty("Study Sites","visibility","none");
+            }
+            // END OF CODE TO BE COPIED
+
+            if (index == 4){
+              menu.style.display ="none"
+              sdg17.style.display="block";
+              //fade in list items for SDG17
+              
+              unfade(sdg17.getElementsByTagName("li").item(0));
+
+              for (var i = 1; i < liCount; i++){ //fade in each line entry one at a time. Controls the speed that the entire set of rows gets faded
+                (function(i) {
+                  setTimeout(function(){
+                    unfade(sdg17.getElementsByTagName("li").item(i));
+                  },i*500)
+                })(i);
+              }
+            } else {
+              sdg17.style.display="none";
+              for (var i = 0; i < liCount; i++){
+                sdg17.getElementsByTagName("li")[i].style.opacity=0;
+              }
+            }
+            document.getElementById('pageindex').textContent = locations[index].id + "/" + locations.length;
+    });
+
+    // Start the playback animation for the prepared slides
+    playback(index);
+});
+</script>
+</body>
+</html>
